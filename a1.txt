@@ -12,6 +12,9 @@ local Events = ReplicatedStorage:WaitForChild("Events", 1337)
 -- Local Player
 local Player = Players.LocalPlayer;
 
+-- UI Lib (Fluxus Lib because I like to shuffle them and they support WEAO <3)
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/UILibs/FluxusUI.lua"))()
+
 -- ESP support
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/SimpleHighlightESP.lua"))()
 
@@ -32,6 +35,35 @@ task.spawn(function()
             end)
         else
             ClearESP("AI_Tracker");
+        end
+    end
+end)
+
+-- ESP AI
+task.spawn(function()
+    while task.wait(0.05) do
+        if AI_ESP then
+            pcall(function()
+                ClearESP("AI_Tracker")
+                local GamePlayers = Workspace:WaitForChild("Game", 1337).Players;
+                for i,v in pairs(GamePlayers:GetChildren()) do
+                    if not game.Players:FindFirstChild(v.Name) then -- Is AI
+                        local studs = Player:DistanceFromCharacter(v.PrimaryPart.Position)
+                        Simple_Create(v.HumanoidRootPart, v.Name, "AI_Tracker", math.floor(studs + 0.5))
+                    end
+                end
+            end)
+        else
+            ClearESP("AI_Tracker");
+        end
+    end
+end)
+
+-- Camera Shake
+task.spawn(function()
+    while task.wait() do
+        if No_CamShake then
+            Player.PlayerScripts:WaitForChild("CameraShake", 1234).Value = CFrame.new(0,0,0) * CFrame.Angles(0,0,0);
         end
     end
 end)
