@@ -1,0 +1,37 @@
+-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage");
+local CoreGui = game:GetService("CoreGui");
+local Players = game:GetService("Players");
+local Workspace = game:GetService("Workspace");
+local Lighting = game:GetService("Lighting");
+local VirtualInputManager = game:GetService("VirtualInputManager");
+
+-- Remote Stuff
+local Events = ReplicatedStorage:WaitForChild("Events", 1337)
+
+-- Local Player
+local Player = Players.LocalPlayer;
+
+-- ESP support
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/SimpleHighlightESP.lua"))()
+
+
+
+task.spawn(function()
+    while task.wait(0.05) do
+        if AI_ESP then
+            pcall(function()
+                ClearESP("AI_Tracker")
+                local GamePlayers = Workspace:WaitForChild("Game", 1337).Players;
+                for i,v in pairs(GamePlayers:GetChildren()) do
+                    if not game.Players:FindFirstChild(v.Name) then -- Is AI
+                        local studs = Player:DistanceFromCharacter(v.PrimaryPart.Position)
+                        Simple_Create(v.HumanoidRootPart, v.Name, "AI_Tracker", math.floor(studs + 0.5))
+                    end
+                end
+            end)
+        else
+            ClearESP("AI_Tracker");
+        end
+    end
+end)
